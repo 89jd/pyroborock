@@ -16,6 +16,13 @@ from Crypto.Cipher import AES
 from subprocess import Popen, PIPE
 import time
 
+#Message keys
+CONNECTED = 'connected'
+READY = 'ready'
+RESPONSE = 'response'
+
+TYPE = 'type'
+
 
 class TuyaProtocol:
     def __init__(self, ip, token, device_id):
@@ -37,11 +44,11 @@ class TuyaProtocol:
             return False
 
     def _on_tuya_message_received(self, message):
-        if message['type'] == 'connected':
+        if message[TYPE] == CONNECTED:
             self.is_connected_to_roborock = True
-        if message['type'] == 'ready':
+        if message[TYPE] == READY:
             self.is_ready_for_comms = True
-        elif message['type'] == 'response':
+        elif message[TYPE] == RESPONSE:
             if self._ob_exists_recursive(['data', 'dps', '102'], message):
                 resp = message['data']['dps']['102']
                 if resp:

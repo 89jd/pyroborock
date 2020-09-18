@@ -6,12 +6,12 @@ def read(fname):
 
 setup(
     name='pyroborock',
-    version='1.0.0',
+    version='1.0.1',
     packages=['pyroborock'],
-    description='Wrapper around node tuyapi',
+    description='Communicate with roborock over tuya protocol',
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
-    url='https://github.com/89jd/pyroborck',
+    url='https://github.com/89jd/pyroborock',
     author='jd89',
     author_email='jd89.dev@gmail.com',
 )

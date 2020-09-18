@@ -1,4 +1,4 @@
-# roborock_comms
+# pyroborock
 
 See https://github.com/89jd/roborock_comms for details on how I go to this point.
 
