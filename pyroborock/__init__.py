@@ -26,14 +26,14 @@ TYPE = 'type'
 
 
 class TuyaProtocol:
-    def __init__(self, ip, token, device_id):
+    def __init__(self, ip, token, device_id, js_dir='./'):
         self.__id = 9999
         
         self.ip = ip 
         self.token = token
         self.device_id = device_id
 
-        self.tuya_node_wrapper = TuyaNodeWrapper(message_received_callback=self._on_tuya_message_received)
+        self.tuya_node_wrapper = TuyaNodeWrapper(message_received_callback=self._on_tuya_message_received, js_location=js_dir)
         self.tuya_node_wrapper.start()
         self.responses = {}
         self.is_connected_to_roborock = False
@@ -133,10 +133,10 @@ class Roborock(Vacuum):
     """Main class representing the vacuum."""
 
     def __init__(
-        self, ip: str, token: str, device_id: str, debug: int = 0
+        self, ip: str, token: str, device_id: str, js_dir: str, debug: int = 0
     ) -> None:
         super().__init__(ip, token, debug=debug)
-        self._protocol = TuyaProtocol(ip, token, device_id)
+        self._protocol = TuyaProtocol(ip, token, device_id, js_dir=js_dir)
 
     def close(self):
         self._protocol.close()
