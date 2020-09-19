@@ -6,7 +6,7 @@ def read(fname):
 
 setup(
     name='pyroborock',
-    version='1.0.1',
+    version='1.0.2',
     packages=['pyroborock'],
     description='Communicate with roborock over tuya protocol',
     long_description=read('README.md'),

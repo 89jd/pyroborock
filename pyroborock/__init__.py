@@ -9,6 +9,7 @@ import tuyapipc
 from tuyapipc import TuyaNodeWrapper
 
 from miio.vacuum import Vacuum
+from miio.exceptions import DeviceError, DeviceException, RecoverableError
 
 from typing import Any, Dict, List
 
@@ -27,9 +28,13 @@ TYPE = 'type'
 class TuyaProtocol:
     def __init__(self, ip, token, device_id):
         self.__id = 9999
+        
+        self.ip = ip 
+        self.token = token
+        self.device_id = device_id
+
         self.tuya_node_wrapper = TuyaNodeWrapper(message_received_callback=self._on_tuya_message_received)
         self.tuya_node_wrapper.start()
-        self.tuya_node_wrapper.connect_device(ip, device_id, token)
         self.responses = {}
         self.is_connected_to_roborock = False
         self.is_ready_for_comms = False
@@ -93,10 +98,15 @@ class TuyaProtocol:
         *,
         extra_parameters = None
     ):
+        is_ready = self.is_connected_to_roborock and self.is_ready_for_comms
+        
+        if not is_ready:
+            self.tuya_node_wrapper.connect_device(self.ip, self.device_id, self.token)
+
         time_waiting = 0
         while not self.is_connected_to_roborock or not self.is_ready_for_comms:
             if time_waiting > 10:
-                return None
+                raise DeviceException('Timed out waiting for response')
             time.sleep(0.2)
             time_waiting += 0.2
         
