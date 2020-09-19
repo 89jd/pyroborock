@@ -133,7 +133,7 @@ class Roborock(Vacuum):
     """Main class representing the vacuum."""
 
     def __init__(
-        self, ip: str, token: str, device_id: str, js_dir: str, debug: int = 0
+        self, ip: str, token: str, device_id: str, js_dir: str = './', debug: int = 0
     ) -> None:
         super().__init__(ip, token, debug=debug)
         self._protocol = TuyaProtocol(ip, token, device_id, js_dir=js_dir)

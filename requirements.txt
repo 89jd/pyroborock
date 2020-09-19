@@ -21,7 +21,7 @@ netifaces==0.10.9
 packaging==20.4
 pkginfo==1.5.0.1
 pycparser==2.20
-pycrypto==2.6.1
+pycryptodome==3.9.8
 Pygments==2.7.1
 pyparsing==2.4.7
 python-dateutil==2.8.1
