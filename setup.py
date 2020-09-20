@@ -9,7 +9,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='pyroborock',
-    version='1.0.5',
+    version='1.0.4',
     packages=['pyroborock'],
     install_requires=requirements,
     description='Communicate with roborock over tuya protocol',
