@@ -26,7 +26,7 @@ Pygments==2.7.1
 pyparsing==2.4.7
 python-dateutil==2.8.1
 python-miio==0.5.3
-pytuyapi-ipc==1.0.1
+pytuyapi-ipc==1.0.2
 pytz==2019.3
 readme-renderer==26.0
 requests==2.24.0

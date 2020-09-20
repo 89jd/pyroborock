@@ -24,16 +24,17 @@ RESPONSE = 'response'
 
 TYPE = 'type'
 
+debug = False
 
 class TuyaProtocol:
-    def __init__(self, ip, token, device_id, js_dir='./'):
+    def __init__(self, ip, token, device_id, js_dir='./', debug=False):
         self.__id = 9999
         
         self.ip = ip 
         self.token = token
         self.device_id = device_id
 
-        self.tuya_node_wrapper = TuyaNodeWrapper(message_received_callback=self._on_tuya_message_received, js_location=js_dir)
+        self.tuya_node_wrapper = TuyaNodeWrapper(message_received_callback=self._on_tuya_message_received, js_location=js_dir, debug=debug)
         self.tuya_node_wrapper.start()
         self.responses = {}
         self.is_connected_to_roborock = False
@@ -136,12 +137,13 @@ class Roborock(Vacuum):
         self, ip: str, token: str, device_id: str, js_dir: str = './', debug: int = 0
     ) -> None:
         super().__init__(ip, token, debug=debug)
-        self._protocol = TuyaProtocol(ip, token, device_id, js_dir=js_dir)
+        self._protocol = TuyaProtocol(ip, token, device_id, js_dir=js_dir, debug=debug)
 
     def close(self):
         self._protocol.close()
 
 def main():
+    debug = True
     tuyapipc.init('./')
     roborock = Roborock(sys.argv[1], sys.argv[3], sys.argv[2])
     print(roborock.status())
