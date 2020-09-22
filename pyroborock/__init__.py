@@ -4,6 +4,7 @@ import os
 import sys
 import asyncio
 import threading
+import logging
 
 import tuyapipc
 from tuyapipc import TuyaNodeWrapper
@@ -18,6 +19,7 @@ from subprocess import Popen, PIPE
 import time
 
 #Message keys
+DISCONNECTED = 'disconnected'
 CONNECTED = 'connected'
 READY = 'ready'
 RESPONSE = 'response'
@@ -54,6 +56,9 @@ class TuyaProtocol:
             self.is_connected_to_roborock = True
         if message[TYPE] == READY:
             self.is_ready_for_comms = True
+        if message[TYPE] == DISCONNECTED:
+            self.is_connected_to_roborock = False
+            self.is_ready_for_comms = False
         elif message[TYPE] == RESPONSE:
             if self._ob_exists_recursive(['data', 'dps', '102'], message):
                 resp = message['data']['dps']['102']
@@ -120,12 +125,17 @@ class TuyaProtocol:
 
         time_waiting = 0
         while req_id not in self.responses:
+            del self.responses[req_id]
             if time_waiting > 10:
-                return None
+                raise DeviceException('No response received')
             time.sleep(0.2)
             time_waiting += 0.2
         
-        return json.loads(self.responses[req_id].decode('utf8'))['result']
+        try:
+            return json.loads(self.responses[req_id].decode('utf8'))['result']
+        except Exception as e:
+            raise DeviceException('Error decoding response') from e
+
 
     def close(self):
         self.tuya_node_wrapper.disconnect()
@@ -137,7 +147,8 @@ class Roborock(Vacuum):
         self, ip: str, token: str, device_id: str, js_dir: str = './', debug: int = 0
     ) -> None:
         super().__init__(ip, token, debug=debug)
-        self._protocol = TuyaProtocol(ip, token, device_id, js_dir=js_dir, debug=debug)
+        print(debug != 0)
+        self._protocol = TuyaProtocol(ip, token, device_id, js_dir=js_dir, debug=debug != 0)
 
     def close(self):
         self._protocol.close()
@@ -145,8 +156,18 @@ class Roborock(Vacuum):
 def main():
     debug = True
     tuyapipc.init('./')
-    roborock = Roborock(sys.argv[1], sys.argv[3], sys.argv[2])
-    print(roborock.status())
+    
+    roborock = Roborock(sys.argv[1], sys.argv[3], sys.argv[2], debug=1)
+    while True:
+        try:
+            print(roborock.status())
+        except DeviceException as e:
+            logging.exception(e)
+        except Exception as e:
+            logging.exception(e)
+            roborock.close()
+            break
+        time.sleep(5)
     roborock.close()
 
 if __name__ == '__main__':
