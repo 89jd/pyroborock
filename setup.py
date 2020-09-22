@@ -4,14 +4,11 @@ import os
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-with open('requirements.txt') as f:
-    requirements = f.read().splitlines()
-
 setup(
     name='pyroborock',
-    version='1.0.8',
+    version='1.0.9',
     packages=['pyroborock'],
-    install_requires=requirements,
+    install_requires=['pytuyapi-ipc==1.0.3', 'python-miio==0.5.3', 'pycryptodome==3.9.8'],
     description='Communicate with roborock over tuya protocol',
     long_description=read('README.md'),
     long_description_content_type='text/markdown',

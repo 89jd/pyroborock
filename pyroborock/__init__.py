@@ -125,14 +125,15 @@ class TuyaProtocol:
 
         time_waiting = 0
         while req_id not in self.responses:
-            del self.responses[req_id]
             if time_waiting > 10:
                 raise DeviceException('No response received')
             time.sleep(0.2)
             time_waiting += 0.2
         
         try:
-            return json.loads(self.responses[req_id].decode('utf8'))['result']
+            response = self.responses[req_id]
+            del self.responses[req_id]
+            return json.loads(response.decode('utf8'))['result']
         except Exception as e:
             raise DeviceException('Error decoding response') from e
 
