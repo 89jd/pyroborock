@@ -42,8 +42,6 @@ class TuyaProtocol:
 
         self.tuya_device = VacuumDevice(device_id, ip, token)
         self.tuya_device.set_version(3.3)
-        # Wait for X seconds between each request
-        self.tuya_device.set_sendWait(0.5)
 
     def _ob_exists_recursive(self, keys, ob, i=0):
         if keys[i] in ob:
@@ -124,9 +122,12 @@ class TuyaProtocol:
             response = self.tuya_device.set_value(101, tuya_req)
             response = self._decode_message(response)
 
-            if response is None:
+            # Only retry with "get_status" command
+            if command == 'get_status' and response is None:
                 retries -= 1
                 time.sleep(1)
+            else:
+                break
 
         if response is not None:
             return response['result']
