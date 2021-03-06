@@ -42,6 +42,8 @@ class TuyaProtocol:
 
         self.tuya_device = VacuumDevice(device_id, ip, token)
         self.tuya_device.set_version(3.3)
+        # Wait for X seconds between each request
+        self.tuya_device.set_sendWait(0.5)
 
     def _ob_exists_recursive(self, keys, ob, i=0):
         if keys[i] in ob:
