@@ -129,7 +129,7 @@ class TuyaProtocol:
             else:
                 break
 
-        if response is not None:
+        if response is not None and 'result' in response:
             return response['result']
 
         return None
