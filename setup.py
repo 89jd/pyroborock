@@ -8,7 +8,7 @@ setup(
     name='pyroborock',
     version='1.1.0',
     packages=['pyroborock'],
-    install_requires=['tinytuya==v1.2.3', 'python-miio==0.5.3', 'pycryptodome==3.9.8'],
+    install_requires=['tinytuya==v1.2.3', 'python-miio==0.5.6', 'pycryptodome==3.9.8'],
     description='Communicate with roborock over tuya protocol',
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
